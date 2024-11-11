@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2017",
+    "types": ["node", "mocha", "selenium-webdriver"]
+  },
+  "include": ["tests/**/*.ts"],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
+} 
