@@ -17,17 +17,17 @@ tests/
 ## Getting Started
 
 1. Install dependencies:
-npm install
+`npm install`
 
 2. Start the development server:
-npm run dev
+`npm run dev`
 
 3. Run tests:
 # Run Playwright tests
-npm run test:playwright
+`npm run test:playwright`
 
 # Run Selenium tests
-npm run test:selenium
+`npm run test:selenium`
 
 # Cypress and Puppeteer coming soon
 
