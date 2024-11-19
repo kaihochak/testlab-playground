@@ -1,18 +1,14 @@
-import assert from 'assert';
 import { Builder, By, until, WebDriver } from 'selenium-webdriver';
 
 describe('Homepage Tests', () => {
+
+  // All the extra stuff is to get the ChromeDriver working
   let driver!: WebDriver;
 
   beforeAll(async () => {
     try {
-      console.log('Setting up WebDriver...');
-      
-      // Set path to ChromeDriver
       const chromedriver = require('chromedriver');
       const chrome = require('selenium-webdriver/chrome');
-      
-      console.log('ChromeDriver path:', chromedriver.path);
       
       const chromeOptions = new chrome.Options();
       chromeOptions.addArguments('--no-sandbox');
@@ -20,26 +16,18 @@ describe('Homepage Tests', () => {
       chromeOptions.addArguments('--headless');
       chromeOptions.addArguments('--disable-gpu');
       
-      // Set the service path directly in the builder
       const service = new chrome.ServiceBuilder(chromedriver.path);
       
-      console.log('Building WebDriver with options...');
       driver = await new Builder()
         .forBrowser('chrome')
         .setChromeOptions(chromeOptions)
-        .setChromeService(service)  // Pass the ServiceBuilder directly
+        .setChromeService(service)
         .build();
-      
-      console.log('WebDriver built successfully');
+
       await driver.manage().setTimeouts({ implicit: 10000 });
       await driver.manage().window().maximize();
-      console.log('WebDriver setup complete');
     } catch (error) {
       console.error('Error in beforeAll:', error);
-      if (error instanceof Error) {
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-      }
       throw error;
     }
   }, 120000);
@@ -48,21 +36,60 @@ describe('Homepage Tests', () => {
     if (driver) {
       await driver.quit();
     }
-  }, 60000);
+  });
 
-  test('should load homepage with correct title', async () => {
-    try {
-      await driver.get('http://localhost:3000');
-      
-      // Add explicit wait for title
-      await driver.wait(until.titleIs('Health Search - Testing Framework Comparison'), 10000);
-      
-      const title = await driver.getTitle();
-      console.log('Title:', title);
-      assert.equal(title, 'Health Search - Testing Framework Comparison');
-    } catch (error) {
-      console.error('Error details:', error);
-      throw error;
-    }
-  }, 120000);  // Increased to 120 seconds
+
+  // Tests
+
+  // Test 1 - Homepage has correct title
+  test('homepage has correct title', async () => {
+    await driver.get('http://localhost:3000');
+    const title = await driver.getTitle();
+    expect(title).toBe('Health Search - Testing Framework Comparison');
+  }, 30000);
+
+  // Test 2 - Shows no results message for invalid search
+  test('shows no results message for invalid search', async () => {
+    await driver.get('http://localhost:3000');
+    await driver.wait(until.elementLocated(By.css('#search-input, .search-input, input[placeholder*="search" i]')), 5000);
+    
+    const searchInput = await driver.findElement(By.css('#search-input, .search-input, input[placeholder*="search" i]'));
+    await searchInput.sendKeys('zzzzzzz');
+    
+    const noResultsMessage = await driver.wait(
+      until.elementLocated(By.xpath("//*[contains(text(), 'No results found for your search criteria.')]")),
+      3000
+    );
+    expect(await noResultsMessage.isDisplayed()).toBe(true);
+  }, 30000);
+
+  // Test 3 - Shows results for valid search
+  test('shows results for valid search', async () => {
+    await driver.get('http://localhost:3000');
+    await driver.wait(until.elementLocated(By.css('#search-input, .search-input, input[placeholder*="search" i]')), 5000);
+    
+    const searchInput = await driver.findElement(By.css('#search-input, .search-input, input[placeholder*="search" i]'));
+    await searchInput.sendKeys('Covid');
+    
+    const resultElement = await driver.wait(
+      until.elementLocated(By.xpath("//*[contains(text(), 'COVID-19 Vaccination Progress')]")),
+      3000
+    );
+    expect(await resultElement.isDisplayed()).toBe(true);
+  }, 30000);
+
+  // Test 4 - Make a failed test (expect result not to be visible)
+  test('failed test', async () => {
+    await driver.get('http://localhost:3000');
+    await driver.wait(until.elementLocated(By.css('#search-input, .search-input, input[placeholder*="search" i]')), 5000);
+    
+    const searchInput = await driver.findElement(By.css('#search-input, .search-input, input[placeholder*="search" i]'));
+    await searchInput.sendKeys('Covid');
+    
+    const resultElement = await driver.wait(
+      until.elementLocated(By.xpath("//*[contains(text(), 'Diabetes Prevalence in Southeast Asia')]")),
+      3000
+    );
+    expect(await resultElement.isDisplayed()).toBe(true);
+  }, 30000);
 });
