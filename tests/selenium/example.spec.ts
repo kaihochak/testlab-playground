@@ -38,7 +38,6 @@ describe('Homepage Tests', () => {
     }
   });
 
-
   // Tests
 
   // Test 1 - Homepage has correct title
