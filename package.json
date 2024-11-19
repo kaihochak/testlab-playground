@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:playwright": "playwright test",
+    "pretest:selenium": "node node_modules/chromedriver/install.js",
     "test:selenium": "jest --config jest.config.js",
     "test:puppeteer": "jest puppeteer.test.ts",
     "test:cypress": "cypress open"
@@ -88,6 +89,7 @@
     "jest-environment-node": "^29.7.0",
     "mocha": "^10.8.2",
     "puppeteer": "^22.4.1",
+    "chromedriver": "^131.0.0",
     "selenium-webdriver": "^4.26.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
