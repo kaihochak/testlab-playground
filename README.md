@@ -6,6 +6,23 @@ This project demonstrates how to implement and run tests using different testing
 - Cypress (Coming Soon)
 - Puppeteer (Coming Soon)
 
+## Table of Contents
+- [Testing Framework Comparison](#testing-framework-comparison)
+  - [Project Structure](#project-structure)
+  - [Getting Started](#getting-started)
+  - [Test Cases](#test-cases)
+  - [Framework-specific Setup](#framework-specific-setup)
+    - [Playwright](#playwright)
+      - [Prerequisites](#prerequisites)
+      - [Installation](#installation)
+      - [Running Tests](#running-tests)
+      - [Project Structure](#project-structure-1)
+    - [Selenium](#selenium)
+    - [Coming Soon](#coming-soon)
+  - [Contributing](#contributing)
+
+
+
 ## Project Structure
 
 tests/
@@ -45,9 +62,45 @@ Each framework implements the same test cases for comparison:
 ## Framework-specific Setup
 
 ### Playwright
-- Uses @playwright/test
-- Configuration in playwright.config.ts
-- Tests in tests/playwright/
+
+This project uses Playwright for end-to-end testing.
+
+#### Prerequisites
+- Node.js (version 14 or higher)
+- npm (comes with Node.js)
+
+#### Installation
+1. Install Playwright:
+```bash
+npm init playwright@latest
+```
+
+2. Install browser dependencies:
+```bash
+npx playwright install
+```
+
+#### Running Tests
+```bash
+# Run all tests
+npx playwright test
+
+# Run tests in specific browser
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+
+# Run tests in UI mode
+npx playwright test --ui
+```
+
+#### Project Structure
+```
+tests/
+└── playwright/
+    └── example.spec.ts    # Playwright test cases
+```
+
 
 ### Selenium
 - Uses selenium-webdriver with Jest
